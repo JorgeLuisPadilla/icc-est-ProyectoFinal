@@ -67,6 +67,7 @@ public class FileGraphRepository implements GraphRepository {
     }
 
     // Guardar el grafo actual
+    @Override
     public void saveGraph(Graph<MapPoint> graph) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Guardar Nodos
@@ -106,23 +107,55 @@ public class FileGraphRepository implements GraphRepository {
 
     private Graph<MapPoint> generateDefaultGraph() {
         Graph<MapPoint> graph = new Graph<>();
-        MapPoint A = new MapPoint("A", 240, 290);
-        MapPoint B = new MapPoint("B", 370, 290);
-        MapPoint C = new MapPoint("C", 480, 290);
-        MapPoint F = new MapPoint("F", 240, 420);
-        MapPoint G = new MapPoint("G", 370, 420);
-        MapPoint D = new MapPoint("D", 480, 540);
-        MapPoint E = new MapPoint("E", 650, 540);
-        MapPoint ISLA = new MapPoint("X", 150, 540); // Nodo aislado para PRUEBA 13
 
-        graph.add(ISLA);
+        MapPoint A = new MapPoint("A", 250, 275);
+        MapPoint B = new MapPoint("B", 410, 280);
+        MapPoint C = new MapPoint("C", 575, 290);
+        MapPoint F = new MapPoint("F", 255, 525);
+        MapPoint G = new MapPoint("G", 415, 530);
+        MapPoint D = new MapPoint("D", 580, 540);
+        MapPoint E = new MapPoint("E", 745, 545);
+        MapPoint X = new MapPoint("X", 100, 525);
+        MapPoint H = new MapPoint("H", 85, 275);
+        MapPoint I = new MapPoint("I", 745, 290);
+        MapPoint J = new MapPoint("J", 90, 400);
+        MapPoint K = new MapPoint("K", 250, 400);
+        MapPoint L = new MapPoint("L", 410, 405);
+        MapPoint M = new MapPoint("M", 575, 420);
+        MapPoint N = new MapPoint("N", 745, 430);
+        MapPoint O = new MapPoint("O", 415, 655);
+        MapPoint P = new MapPoint("P", 585, 660);
+        MapPoint Z = new MapPoint("Z", 745, 665);
+
+        graph.add(Z);
+
+        // Conecciones bidireccionales
         graph.addEdge(A, B);
         graph.addEdge(B, C);
-        graph.addEdge(A, F);
         graph.addEdge(F, G);
         graph.addEdge(G, D);
-        graph.addEdge(C, D);
         graph.addEdge(D, E);
+        graph.addEdge(H, A);
+        graph.addEdge(C, I);
+        graph.addEdge(K, L);
+        graph.addEdge(L, M);
+        graph.addEdge(M, N);
+        graph.addEdge(G, O);
+
+        // Conexiones unidireccionales
+        graph.addEdgeUni(X, F);
+        graph.addEdgeUni(H, J);
+        graph.addEdgeUni(J, X);
+
+        graph.addEdgeUni(A, K);
+        graph.addEdgeUni(K, F);
+        graph.addEdgeUni(B, L);
+        graph.addEdgeUni(L, G);
+        graph.addEdgeUni(C, D);
+        graph.addEdgeUni(M, D);
+        graph.addEdgeUni(I, N);
+        graph.addEdgeUni(N, E);
+        graph.addEdgeUni(O, P);
 
         return graph;
     }
