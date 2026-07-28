@@ -11,56 +11,59 @@ public class BFSPathFinder<T> implements PathFinder<T> {
 
     @Override
     public PathResult<T> find(Graph<T> graph, T start, T end) {
-
-        PathResult<T> result = new PathResult<>();
+        Set<T> visited = new LinkedHashSet<>();
+        Set<T> path = new LinkedHashSet<>();
+        
+        if (graph == null || start == null || end == null) {
+            return new PathResult<>(visited, path);
+        }
 
         Queue<T> queue = new LinkedList<>();
-        Set<T> visited = new LinkedHashSet<>();
         Map<T, T> previous = new LinkedHashMap<>();
 
         queue.offer(start);
         visited.add(start);
 
         while (!queue.isEmpty()) {
-
             T current = queue.poll();
-
-            result.addVisited(current);
 
             if (current.equals(end)) {
                 break;
             }
 
-            for (Node<T> neighbor : graph.getVecinos(current)) {
+            Node<T> currentNode = graph.getNode(current);
+            if (currentNode != null) {
+                Set<Node<T>> neighbors = graph.getGraph().get(currentNode);
+                if (neighbors != null) {
+                    for (Node<T> neighbor : neighbors) {
+                        T value = neighbor.getValue();
 
-                T value = neighbor.getValue();
-
-                if (!visited.contains(value)) {
-                    visited.add(value);
-                    previous.put(value, current);
-                    queue.offer(value);
+                        if (!visited.contains(value)) {
+                            visited.add(value);
+                            previous.put(value, current);
+                            queue.offer(value);
+                        }
+                    }
                 }
             }
         }
 
+        // Si no se encontró el nodo final
         if (!visited.contains(end)) {
-            return result;
+            return new PathResult<>(visited, path);
         }
 
-        LinkedList<T> path = new LinkedList<>();
-
+        // Reconstrucción del camino trazado por BFS
+        LinkedList<T> reconstructedPath = new LinkedList<>();
         T current = end;
 
         while (current != null) {
-            path.addFirst(current);
+            reconstructedPath.addFirst(current);
             current = previous.get(current);
         }
 
-        for (T node : path) {
-            result.addPath(node);
-        }
+        path.addAll(reconstructedPath);
 
-        return result;
+        return new PathResult<>(visited, path);
     }
-
 }

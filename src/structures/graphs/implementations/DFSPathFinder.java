@@ -15,58 +15,61 @@ public class DFSPathFinder<T> implements PathFinder<T> {
 
     @Override
     public PathResult<T> find(Graph<T> graph, T start, T end) {
-
-        PathResult<T> result = new PathResult<>();
-
         Set<T> visited = new LinkedHashSet<>();
+        Set<T> path = new LinkedHashSet<>();
         Map<T, T> previous = new LinkedHashMap<>();
 
-        dfs(graph, start, end, visited, previous, result);
-
-        if (!visited.contains(end)) {
-            return result;
+        if (graph == null || start == null || end == null) {
+            return new PathResult<>(visited, path);
         }
 
-        LinkedList<T> path = new LinkedList<>();
+        dfs(graph, start, end, visited, previous);
 
+        // Si no se llegó al nodo destino, retorna con el camino vacío
+        if (!visited.contains(end)) {
+            return new PathResult<>(visited, path);
+        }
+
+        // Reconstrucción del camino desde el destino hasta el inicio
+        LinkedList<T> reconstructedPath = new LinkedList<>();
         T current = end;
 
         while (current != null) {
-            path.addFirst(current);
+            reconstructedPath.addFirst(current);
             current = previous.get(current);
         }
 
-        for (T node : path) {
-            result.addPath(node);
-        }
+        path.addAll(reconstructedPath);
 
-        return result;
+        return new PathResult<>(visited, path);
     }
 
     private boolean dfs(Graph<T> graph,
                         T current,
                         T end,
                         Set<T> visited,
-                        Map<T, T> previous,
-                        PathResult<T> result) {
+                        Map<T, T> previous) {
 
         visited.add(current);
-        result.addVisited(current);
 
         if (current.equals(end)) {
             return true;
         }
 
-        for (Node<T> neighbor : graph.getVecinos(current)) {
+        Node<T> currentNode = graph.getNode(current);
+        if (currentNode != null) {
+            Set<Node<T>> neighbors = graph.getGraph().get(currentNode);
+            if (neighbors != null) {
+                for (Node<T> neighbor : neighbors) {
+                    T value = neighbor.getValue();
 
-            T value = neighbor.getValue();
+                    if (!visited.contains(value)) {
+                        previous.put(value, current);
 
-            if (!visited.contains(value)) {
-
-                previous.put(value, current);
-
-                if (dfs(graph, value, end, visited, previous, result)) {
-                    return true;
+                        if (dfs(graph, value, end, visited, previous)) {
+                            return true;
+                        }
+                    }
                 }
             }
         }
