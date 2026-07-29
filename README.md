@@ -134,27 +134,8 @@ Contiene la interfaz gráfica, el mapa, los nodos, las conexiones y la visualiza
 
 # 8. DIAGRAMA UML
 
-Incluir el diagrama UML de las clases principales:
 
-```text
-MapPoint
-    ↓
-Node<T>
-    ↓
-Graph<T>
-    ↓
-PathFinder<T>
-   ↙       ↘
-BFS       DFS
-   ↘       ↙
-   PathResult<T>
-
-GraphController
-       ↓
-      View
-```
-
-El diagrama debe mostrar las relaciones entre las clases, atributos principales, métodos principales, herencia e implementación de interfaces.
+![alt text](src/resources/Diagrama.png)
 
 ---
 
