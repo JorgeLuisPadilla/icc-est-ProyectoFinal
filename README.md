@@ -311,6 +311,10 @@ La comparación debe realizarse utilizando las mismas configuraciones del mapa.
 
 Análisis (basado en las ejecuciones reales sobre el mapa por defecto: casos H→A, A→D y A→Z):
 
+**¿Qué diferencias se observaron en el orden de exploración de BFS y DFS?**
+
+BFS realiza la exploracion por niveles comenzando por los nodos mas cercanos al punto de inicio. En cambio DFS explora una rama en profundidad antes de regresar y continuar por otra. Por esta razon el orden de los nodos visitados fue diferente entre ambos algoritmos.
+
 **Orden de exploración:** BFS explora por niveles: primero visita todos los vecinos directos del nodo de inicio y recién después avanza a los vecinos de esos vecinos. DFS en cambio se compromete con una sola rama y la sigue hasta el final antes de retroceder. Esto se ve claramente en el caso A→D: BFS descubre B, H y K desde A antes de seguir avanzando; DFS en cambio se mete por A→B→C→I→N→M→L→K→F→G→D, una rama larga, antes de llegar al destino.
 
 **Ruta encontrada:** No siempre coinciden. En H→A ambos encontraron la misma ruta (`[H, A]`, 1 arista), porque era la única conexión directa. En A→D encontraron rutas distintas: BFS halló `[A, B, C, D]` (3 aristas, usando el atajo unidireccional C→D), mientras que DFS encontró `[A, B, C, I, N, M, L, K, F, G, D]` (10 aristas), una ruta válida pero mucho más larga. En A→Z ninguno encontró ruta, porque Z está aislado (sin conexiones).
@@ -320,6 +324,11 @@ Análisis (basado en las ejecuciones reales sobre el mapa por defecto: casos H�
 **Tiempo de ejecución:** BFS tardó 3.1778 ms en el primer caso (H→A) por el "calentamiento" inicial de la JVM al cargar la clase por primera vez; en los casos siguientes bajó a 0.1469 ms (A→D) y 0.1198 ms (A→Z). DFS fue consistentemente más rápido: 0.0888 ms, 0.0695 ms y 0.0833 ms respectivamente. Con un grafo de solo 18 nodos estos tiempos no son concluyentes sobre cuál algoritmo es "mejor": están dominados por el overhead de la JVM, no por la complejidad real de cada algoritmo.
 
 **Influencia de la estructura del grafo:** Las aristas unidireccionales (como C→D) actúan como atajos que solo se recorren en un sentido. Esto benefició a BFS en el caso A→D, porque al explorar por niveles encontró ese atajo casi de inmediato. A DFS, en cambio, lo perjudicó: como sigue una sola rama a la vez, se desvió por el resto del grafo (I, N, M, L, K, F, G) antes de llegar a D por ese mismo atajo. En general, entre más ramificado y con más atajos dirigidos tenga el grafo, mayor es la diferencia entre la ruta "óptima" de BFS y la ruta "primera que encuentra" de DFS.
+
+**¿Qué mejoras podrían implementarse para trabajar con calles ponderadas?**
+
+Para trabajar con calles ponderadas se podria agregar un peso a cada arista para representar la distancia el tiempo o el costo de recorrer una calle. De esta manera se podrian implementar algoritmos como Dijkstra o A* que permitan encontrar la ruta de menor costo en lugar de considerar solamente la cantidad de aristas.
+
 
 ---
 
