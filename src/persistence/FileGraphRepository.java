@@ -15,6 +15,8 @@ public class FileGraphRepository implements GraphRepository {
         File file = new File(filePath);
 
         if (!file.exists()) {
+            Graph<MapPoint> defaultGraph = generateDefaultGraph();
+            saveGraph(defaultGraph);
             return generateDefaultGraph();
         }
 
@@ -146,7 +148,6 @@ public class FileGraphRepository implements GraphRepository {
         graph.addEdgeUni(X, F);
         graph.addEdgeUni(H, J);
         graph.addEdgeUni(J, X);
-
         graph.addEdgeUni(A, K);
         graph.addEdgeUni(K, F);
         graph.addEdgeUni(B, L);
